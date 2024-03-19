@@ -1,0 +1,20 @@
+.upcentral{
+    position: relative;
+    margin-top: 0px;
+    left:15%
+}
+
+body{
+    align-items: center;
+    background-color: var(--white);
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: grid;
+
+}
+html{
+    min-height: 512px;
+    min-width: 1000px;
+}
