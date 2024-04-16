@@ -17,16 +17,16 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-body {
+.loginpage {
     align-items: center;
-    background-color: var(--white);
-    background: url("../../public/login.jpg");
+    /*background-color: var(--white);*/
+    background-image: url("../../public/space.jpg");
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     display: grid;
-    /*height: 100vh;*/
+    height: 100vh;
     /*place-items: center;*/
 }
 

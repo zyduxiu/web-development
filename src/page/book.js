@@ -1,4 +1,4 @@
-import {React,useState } from 'react';
+import {React, useEffect, useState} from 'react';
 import {
     ShoppingCartOutlined,
     BookOutlined,
@@ -16,10 +16,13 @@ import BookDetail from "../component/book detail";
 //import {increment,decrement} from "./store/modules/counterstore";
 import {Button} from "antd";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+
+
+import bookdetail from "../services/getbook";
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
-// import {Link} from 'react-router-dom'
 
+// import {Link} from 'react-router-dom'
 
 export default function Bookpage(){
     const navigate = useNavigate();
@@ -70,17 +73,19 @@ export default function Bookpage(){
                                 <img src={require('../pic/store1.png')} style={{
                                     position:'absolute',
                                     width:'120px',
-                                    height:'60px',marginTop:'0px'
+                                    height:'60px',marginTop:'2.5px'
 
                                 }}></img>
                             </Link>
+                        <Link to='../profile'>
                             <Button shape="circle" icon={<UserOutlined/>} size="large"
                                     style={{
                                         position: 'absolute',
                                         marginLeft: '75%',
-                                        marginTop: '-27px'
+                                        marginTop: '10px'
                                     }}
                             ></Button>
+                        </Link>
                         {/*</Space>*/}
                     </Header>
                     <Content

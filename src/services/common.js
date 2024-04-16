@@ -1,3 +1,4 @@
+// import fetch from "unfetch";//
 export async function getJson(url) {
     let res = await fetch(url, { method: "GET", credentials: "include" });
     return res.json();
@@ -12,7 +13,7 @@ export async function put(url, data) {
     let opts = {
         method: "PUT",
         body: JSON.stringify(data),
-        headers: {
+    headers: {
             'Content-Type': 'application/json'
         },
         credentials: "include"
@@ -40,11 +41,15 @@ export async function post(url, data) {
     return res.json();
 }
 
-export const BASEURL = process.env.REACT_APP_BASE_URL ?? 'http://localhost:8080';
+export const BASEURL = process.env.REACT_APP_BASE_URL
 export const PREFIX = `${BASEURL}/api`;
 export const API_DOCS_URL = `${BASEURL}/api-docs`;
 export const IMAGE_PREFIX = `${BASEURL}/images`;
 export const DUMMY_RESPONSE = {
     ok: false,
     message: "网络错误！"
+}
+export default async function getbooks(){
+    let res=await fetch('http://localhost:8080/home');
+    return res.json();
 }

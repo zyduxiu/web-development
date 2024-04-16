@@ -7,8 +7,51 @@ import {Input} from 'antd';
 import "../css/login.css"
 import "../css/login_background.css"
 import {CSSTransition, TransitionGroup } from 'react-transition-group';
-
+import getlogin from "../services/login";
+import {useNavigate} from "react-router-dom";
+import Modal from "../component/FailModal";
 export default function Loginpage(){
+    const navigate=useNavigate()
+    const [username,setUsername]=useState(null);
+    const [password,setPassword]=useState(null);
+    const [whetherlogin,setWhetherlogin]=useState(null);
+    const [click,setClick] = useState(0);
+    let times=0;
+
+    // const handleCloseModal = () => {
+    //     setShowModal(false);
+    // };
+    const handleusernamechange=(e)=>{
+        setUsername(e.target.value);
+    }
+    const handlepasswordchange=(e)=>{
+        setPassword(e.target.value);
+    }
+    const user= {
+        username:username,
+        password:password,
+}
+
+    const handleClick=async ()=>{
+        let res=await getlogin(user);
+        setWhetherlogin(res);
+        times++;
+        setClick(times)
+        // console.log(whetherlogin);
+    }
+    function handlejudge(){
+        if(whetherlogin){
+            navigate("/home");
+        }
+        if(whetherlogin!==null&&!whetherlogin){
+
+
+        }
+    }
+
+    useEffect(()=>{
+        handlejudge();}, [click]);
+
     const [isSignedUpVisible, setIsSignedUpVisible] = useState(false);
 
     const toggleSignUp = () => {
@@ -56,7 +99,7 @@ export default function Loginpage(){
         )
     }
 
-    function sign_in() {
+    function Sign_in() {
         return (
 
             <div>
@@ -74,15 +117,21 @@ export default function Loginpage(){
                             fontSize: "1.5rem"
                         }}>Sign in
                         </text>
-                        <Input placeholder="default size" prefix={<UserOutlined/>} addonBefore="username"/>
-                        <Input placeholder="default size" prefix={<LockOutlined/>} addonBefore="password"/>
+                        <div style={{
+                            display:'flex',
+                            flexDirection:'row'
+                        }}>
+                            <Input placeholder="default size" id="userblank" onChange={handleusernamechange} prefix={<UserOutlined/>} addonBefore="username" ></Input>
+
+                        </div>
+                        <Input placeholder="default size"  id="passwordblank" onChange={handlepasswordchange} prefix={<LockOutlined/>} addonBefore="password" ></Input>
                         <a href="#" className="link" style={{
                             position: "relative",
                             paddingLeft: "35%",
                             color:'blue',
                             size: "large",
                         }}>Forgot your password?</a>
-                        <button className="btn" style={{
+                        <button className="btn" onClick={handleClick} style={{
                             position: "relative",
                             marginLeft: "0%"
                         }}>Sign in</button>
@@ -97,7 +146,7 @@ export default function Loginpage(){
         return(
             <div class="sign_in_button">
                 <div>
-                    <button class="btn" id="Adapt mode" onClick={toggleSignUp} style={{
+                    <button className="btn" id="Adapt mode" onClick={toggleSignUp} style={{
                         opacity:"1",
                         marginRight:'15%',
                         marginTop:'25%'
@@ -107,26 +156,27 @@ export default function Loginpage(){
         )}
     function sign_up_button(){
         return(
-            <div class="sign_up_button">
+            <div className="sign_up_button">
                 <div>
-                    <button class="btn" id="Adapt mode" onClick={toggleSignUp} style={{
+                    <button className="btn" id="Adapt mode" onClick={toggleSignUp} style={{
                         opacity:"1",
-                        marginTop:'25%'
+                        marginTop:'25%',
+                        marginRight:'15%',
                     }}>Sign Up</button>
                 </div>
             </div>
         )}
 
     return (
-        <div>
+        <div className="loginpage">
             <TransitionGroup>
                 {isSignedUpVisible ? (
                     <div>
                         <CSSTransition
-                            timeout={500} // 动画的持续时间（毫秒）
-                            classNames="sign_up" // CSS中定义的动画类名前缀
-                            unmountOnExit // 当退出时卸载组件
-                            mountOnEnter // 当进入时挂载组件
+                            timeout={500}
+                            classNames="sign_up"
+                            unmountOnExit
+                            mountOnEnter
                         >
                             {sign_up()}
                             {/*{sign_in_button()}*/}
@@ -137,15 +187,15 @@ export default function Loginpage(){
                 ) : (
                     <div>
                         <CSSTransition
-                            timeout={500} // 动画的持续时间（毫秒）
-                            classNames="sign_in" // CSS中定义的动画类名前缀
-                            unmountOnExit // 当退出时卸载组件
-                            mountOnEnter // 当进入时挂载组件
+                            timeout={500}
+                            classNames="sign_in"
+                            unmountOnExit
+                            mountOnEnter
                         >
-                            {sign_in()}
+                            {Sign_in()}
                             {/*{sign_in_button()}*/}
                         </CSSTransition>
-                        {sign_in()}
+                        {Sign_in()}
                         {sign_up_button()}</div>
                 )}
             </TransitionGroup>

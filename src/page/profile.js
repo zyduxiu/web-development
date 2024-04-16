@@ -12,6 +12,7 @@ import Booklist from "../component/booklist";
 import {useNavigate,Link} from "react-router-dom";
 import "../css/home.css"
 //import {increment,decrement} from "./store/modules/counterstore";
+import Profilelist from "../component/profilelist";
 import {Button} from "antd";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
@@ -71,17 +72,19 @@ export default function  Profilepage () {
                             <img src={"store.png"} style={{
                                 position: 'absolute',
                                 width: '120px',
-                                height: '60px', marginTop: '-30px'
+                                height: '60px', marginTop: '-35px'
 
                             }}></img>
                         </Link>
-                        <Button shape="circle" icon={<UserOutlined/>} size="large"
-                                style={{
-                                    position: 'absolute',
-                                    marginLeft: '75%',
-                                    marginTop: '-27px'
-                                }}
-                        ></Button>
+                        <Link to='../profile'>
+                            <Button shape="circle" icon={<UserOutlined/>} size="large"
+                                    style={{
+                                        position: 'absolute',
+                                        marginLeft: '75%',
+                                        marginTop: '-27px'
+                                    }}
+                            ></Button>
+                        </Link>
                     </Space>
                 </Header>
                 <Content
@@ -103,8 +106,11 @@ export default function  Profilepage () {
                             minHeight: 360,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
+                            height:'100%'
+
                         }}
                     >
+                    <Profilelist/>
                     </div>
                 </Content>
                 <Footer

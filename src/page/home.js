@@ -9,7 +9,7 @@ import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import {SearchProps} from 'antd'
 import Booklist from "../component/booklist";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
  import "../css/home.css"
 //import {increment,decrement} from "./store/modules/counterstore";
 import {Button} from "antd";
@@ -70,7 +70,7 @@ export default function  Homepage () {
                     <img src={"store.png"} style={{
                         position:'absolute',
                         width:'120px',
-                        height:'60px',marginTop:'-30px'
+                        height:'60px',marginTop:'-35px'
 
                     }}></img>
                     <Search rootClassName={"upcentral"}
@@ -85,13 +85,15 @@ export default function  Homepage () {
                             }}
                         // onSearch={onSearch}
                     />
-                    <Button shape="circle" icon={<UserOutlined/> } size="large"
-                        style={{
-                            position:'absolute',
-                            marginLeft:'75%',
-                            marginTop:'-27px'
-                        }}
-                    ></Button>
+                        <Link to='../profile'>
+                            <Button shape="circle" icon={<UserOutlined/>} size="large"
+                                    style={{
+                                        position: 'absolute',
+                                        marginLeft: '75%',
+                                        marginTop: '-27px'
+                                    }}
+                            ></Button>
+                        </Link>
                     </Space>
                 </Header>
                 <Content

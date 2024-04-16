@@ -14,6 +14,7 @@ import "../css/home.css"
 //import {increment,decrement} from "./store/modules/counterstore";
 import {Button} from "antd";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import Cartlist from "../component/cartlist";
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
 
@@ -71,17 +72,19 @@ export default function  Cartpage () {
                         <img src={"store.png"} style={{
                             position: 'absolute',
                             width: '120px',
-                            height: '60px', marginTop: '-30px'
+                            height: '60px', marginTop: '-35px'
 
                         }}></img>
                         </Link>
-                        <Button shape="circle" icon={<UserOutlined/>} size="large"
-                                style={{
-                                    position: 'absolute',
-                                    marginLeft: '75%',
-                                    marginTop: '-27px'
-                                }}
+                        <Link to='../profile'>
+                            <Button shape="circle" icon={<UserOutlined/>} size="large"
+                                    style={{
+                                        position: 'absolute',
+                                        marginLeft: '75%',
+                                        marginTop: '-27px'
+                                    }}
                         ></Button>
+                        </Link>
                     </Space>
                 </Header>
                 <Content
@@ -105,6 +108,7 @@ export default function  Cartpage () {
                             borderRadius: borderRadiusLG,
                         }}
                     >
+                    <Cartlist/>
                     </div>
                 </Content>
                 <Footer

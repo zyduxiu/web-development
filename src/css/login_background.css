@@ -1,12 +1,12 @@
-body {
-    align-items: center;
-    background-color: var(--white);
-    background: url("../../public/space.jpg");
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: grid;
-    /*height: 100vh;*/
-    /*place-items: center;*/
-}
+/*body {*/
+/*    align-items: center;*/
+/*    background-color: var(--white);*/
+/*    background: url("../../public/space.jpg");*/
+/*    background-attachment: fixed;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*    background-size: cover;*/
+/*    display: grid;*/
+/*    !*height: 100vh;*!*/
+/*    !*place-items: center;*!*/
+/*}*/
