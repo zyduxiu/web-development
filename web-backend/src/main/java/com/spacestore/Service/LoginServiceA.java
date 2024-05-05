@@ -1,14 +1,14 @@
 package com.spacestore.Service;
-import com.spacestore.Service.Loginservice;
-import com.spacestore.mapper.UserMapper;
+import com.spacestore.repository.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.spacestore.Loginpojo.Loginuser;
+import com.spacestore.Dao.Loginuser;
 @Component
-public class LoginServiceA {
+public class LoginServiceA implements Loginservice{
     @Autowired
     private UserMapper userMapper;
     public Loginuser checkLogin(String username,String password){
-        return userMapper.findByUsernameAndPassword(username,password);
+        Loginuser user=userMapper.findByUsernameAndPassword(username,password);
+        return user;
     }
 }

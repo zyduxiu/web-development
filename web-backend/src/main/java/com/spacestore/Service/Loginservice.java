@@ -1,7 +1,5 @@
 package com.spacestore.Service;
-import com.spacestore.Service.Loginservice;
-import com.spacestore.mapper.UserMapper;
-
+import com.spacestore.Dao.Loginuser;
 public interface Loginservice {
-    public String checklogin(String a,String b);
+    public Loginuser checkLogin(String a,String b);
 }
