@@ -1,39 +1,75 @@
-import React, {useEffect} from 'react'
-import {Layout, Space} from 'antd'
-import '../css/booklist.css'
-import {Card} from 'antd'
-import {useState} from "react";
-import {Link} from 'react-router-dom'
-import Books from './books'
+import React, { useEffect, useState } from 'react';
+import { Layout, Pagination, Space } from 'antd';
+import '../css/booklist.css';
+import { Card } from 'antd';
+import { Link } from 'react-router-dom';
+import Books from './books';
 import getbooks from "../services/common";
 import detail from "../services/getbook";
-export default function Booklist(){
-    // Books
-    // const [Books, setBooks] = useState(null);
-    // const fetchBooks=async ()=>{
-    //     let lists = await getbooks();
-    //     setBooks(lists);
-    //     console.log(lists);
-    //     // setImageUrl(lists.imageUrl);
-    // }
-    //
-    // useEffect(()=>{
-    //     fetchBooks();}, []);
-    if(Books()!==null) {
+import { handlesearch } from "../services/handlesearch";
+import ReactPaginate from 'react-paginate';
+
+export default function Booklist({ searchitem }) {
+    let [Books, setBooks] = useState(null);
+    const [search, setSearch] = useState();
+    const [pageCount, setPageCount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+
+    useEffect(() => {
+        setSearch(searchitem);
+    }, [searchitem]);
+
+    useEffect(() => {
+        fetchBooks();
+    }, [currentPage]);
+
+    useEffect(() => {
+        fetchsearchBooks();
+    }, [search]);
+
+    const fetchBooks = async () => {
+        console.log("im hrer")
+        let lists = await getbooks(currentPage, pageSize);
+        setPageCount(Math.ceil(lists.length / 10));
+        setBooks(lists.content);
+        console.log(lists.content.length)
+        let x=lists.totalElements;
+        console.log(x);
+        console.log(pageSize)
+        setPageCount(Math.ceil(x / pageSize));
+        console.log(pageCount);
+    };
+    console.log(pageCount);
+    const fetchsearchBooks = async () => {
+        console.log("im hrer")
+        let lists = await handlesearch(search);
+        setPageCount(1);
+        setBooks(lists);
+      // console.log(lists.content.length)
+      //  let x=lists.content.length;
+      //  console.log(x);
+       // setPageCount(x);
+    };
+
+    const onChange = (pageNumber) => {
+        setCurrentPage(pageNumber-1);
+    };
+    console.log(Books);
+    if(Books) {
         return (
             <div>
-                <ul /* 三列，每列占据可用空间的相等部分 */
-                    /* 定义网格项之间的间距 */ style={{
+                <ul style={{
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap'
                 }}>
-                    {Books().map((book) => (
+                    {Books.map((book) => (
 
 
                         // <Space size={0}>
                         <Card style={{
-                            width: '280px'
+                            width: '260px'
                         }}>
                             <Link to={`/book/${book.id}`}>
                                 <li key={book.id} style={{
@@ -58,6 +94,11 @@ export default function Booklist(){
                     ))}
 
                 </ul>
+                <div style={{
+                    marginLeft:'40%',marginTop:'40px'
+                }}>
+                <Pagination showQuickJumper defaultCurrent={1} total={10*pageCount} onChange={onChange} />
+                </div>
             </div>
         );
     }

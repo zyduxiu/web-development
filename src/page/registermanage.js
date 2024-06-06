@@ -4,8 +4,7 @@ import {
     BookOutlined,
     AccountBookOutlined,
     UserOutlined,
-    BarChartOutlined,
-    SecurityScanOutlined, PieChartOutlined
+    BarChartOutlined, SecurityScanOutlined, PieChartOutlined
 } from '@ant-design/icons';
 import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
@@ -17,13 +16,12 @@ import Orderlist from "../component/orderlist";
 //import {increment,decrement} from "./store/modules/counterstore";
 import {Button} from "antd";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import Icon from "antd/es/icon";
+import UserManageList from "../component/usermanagelist";
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
 
 let username=localStorage.getItem('username');
-export default function  Orderpage ({element}) {
-
+export default function  RegisterManagepage (element) {
     const navigate = useNavigate();
     function getItem(label, key, icon, path, children) {
         return {
@@ -57,11 +55,11 @@ export default function  Orderpage ({element}) {
         ]),
     ];
 
-
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
     return (
         <Layout
             style={{
@@ -70,7 +68,7 @@ export default function  Orderpage ({element}) {
         >
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className="demo-logo-vertical" />
-                <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
+                <Menu theme="dark" defaultSelectedKeys={['8']} mode="inline">
                     {items.map(item => (
                         // 如果当前菜单项有子菜单项，渲染 SubMenu，否则渲染普通的 Menu.Item
                         item.children ? (
@@ -97,7 +95,7 @@ export default function  Orderpage ({element}) {
                     }}>
                     <Space size="customize">
                         <Link to='../home'>
-                            <img src={"store.png"} style={{
+                            <img src={require('../pic/store1.png')} style={{
                                 position: 'absolute',
                                 width: '120px',
                                 height: '60px', marginTop: '-35px'
@@ -135,7 +133,7 @@ export default function  Orderpage ({element}) {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                    <Orderlist/>
+                        <UserManageList></UserManageList>
                     </div>
                 </Content>
                 <Footer

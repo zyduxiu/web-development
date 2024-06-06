@@ -22,44 +22,6 @@
     transition: all 1s linear;
 }
 
-.btn2>span {
-    position: absolute;
-}
 
-.btn2>span:nth-child(1) {
-    width: 100%;
-    height: 2px;
-    background: -webkit-linear-gradient(to left, transparent, #03e9f4);
-    left: -100%;
-    top: 0px;
-    animation: line1 linear 15s infinite normal;
-    animation-delay: 0s;
-}
-
-@keyframes line1 {
-    50%{
-
-    }
-    100% {
-        left: 100%;
-        animation-delay: 10s;
-    }
-}
-.btn2>span:nth-child(2) {
-    width: 100%;
-    height: 2px;
-    background: -webkit-linear-gradient(to left, transparent, #03e9f4);
-    left: -100%;
-    top: 0px;
-    animation: line2 linear 10s infinite normal;
-}
-@keyframes line2 {
-    50% {
-
-    }
-    100% {
-        left: 100%;
-    }
-}
 
 

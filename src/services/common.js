@@ -49,7 +49,13 @@ export const DUMMY_RESPONSE = {
     ok: false,
     message: "网络错误！"
 }
-export default async function getbooks(){
-    let res=await fetch('http://localhost:8080/home');
+export default async function getbooks(page,size){
+    let params = new URLSearchParams();
+    params.append('page', page);
+    params.append('size', size);
+    let res=await fetch( `http://localhost:8080/home?${params.toString()}`,{
+        method:'GET',
+        credentials: "include",
+    });
     return res.json();
 }

@@ -4,8 +4,7 @@ import {
     BookOutlined,
     AccountBookOutlined,
     UserOutlined,
-    BarChartOutlined,
-    SecurityScanOutlined, PieChartOutlined
+    BarChartOutlined, SecurityScanOutlined, PieChartOutlined
 } from '@ant-design/icons';
 import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
@@ -13,18 +12,18 @@ import {SearchProps} from 'antd'
 import Booklist from "../component/booklist";
 import {useNavigate,Link} from "react-router-dom";
 import "../css/home.css"
+import Bookmanagelist from "../component/bookmanagelist";
 import Orderlist from "../component/orderlist";
 //import {increment,decrement} from "./store/modules/counterstore";
 import {Button} from "antd";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import Icon from "antd/es/icon";
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
 
 let username=localStorage.getItem('username');
-export default function  Orderpage ({element}) {
-
+export default function  BookManagepage ({element}) {
     const navigate = useNavigate();
+    const [searchitem,setSearchitem]=useState();
     function getItem(label, key, icon, path, children) {
         return {
             key,
@@ -38,6 +37,7 @@ export default function  Orderpage ({element}) {
             children,
         };
     }
+
 
 
     const items = [
@@ -62,6 +62,7 @@ export default function  Orderpage ({element}) {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
     return (
         <Layout
             style={{
@@ -70,7 +71,7 @@ export default function  Orderpage ({element}) {
         >
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className="demo-logo-vertical" />
-                <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
+                <Menu theme="dark" defaultSelectedKeys={['7']} mode="inline">
                     {items.map(item => (
                         // 如果当前菜单项有子菜单项，渲染 SubMenu，否则渲染普通的 Menu.Item
                         item.children ? (
@@ -97,13 +98,26 @@ export default function  Orderpage ({element}) {
                     }}>
                     <Space size="customize">
                         <Link to='../home'>
-                            <img src={"store.png"} style={{
+                            <img src={require('../pic/store1.png')} style={{
                                 position: 'absolute',
                                 width: '120px',
                                 height: '60px', marginTop: '-35px'
 
                             }}></img>
                         </Link>
+                            <Search rootClassName={"upcentral"}
+                                    placeholder="input search text"
+                                    enterButton="Search"
+                                    onSearch={(value) => setSearchitem(value)}
+                                    size="middle"
+                                    style={{
+                                        position:'absolute',
+                                        width:'40%',
+                                        marginLeft:'250px',
+                                        marginTop:'-27px'
+                                    }}
+                                // onSearch={onSearch}
+                            />
                         <Link to='../profile'>
                             <Button shape="circle" icon={<UserOutlined/>} size="large"
                                     style={{
@@ -135,8 +149,8 @@ export default function  Orderpage ({element}) {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                    <Orderlist/>
-                    </div>
+                            <Bookmanagelist searchitem={searchitem}></Bookmanagelist>
+                        </div>
                 </Content>
                 <Footer
                     style={{
@@ -147,5 +161,5 @@ export default function  Orderpage ({element}) {
                 </Footer>
             </Layout>
         </Layout>
-    );
+);
 };
