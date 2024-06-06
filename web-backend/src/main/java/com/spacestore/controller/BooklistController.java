@@ -1,5 +1,5 @@
 package com.spacestore.controller;
-import com.spacestore.Dao.booktable;
+import com.spacestore.Entity.bookdto;
 import com.spacestore.Service.BooklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,7 @@ public class BooklistController {
     BooklistService booklistService;
     @CrossOrigin // 允许来自http://localhost:3000的请求
     @GetMapping("/book")
-    public booktable getlist(int id){
+    public bookdto getlist(int id){
         return booklistService.getBooklist(id);
     }
 

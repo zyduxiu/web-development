@@ -1,10 +1,10 @@
 package com.spacestore.repository;
 
-import com.spacestore.Dao.Carttable;
+import com.spacestore.Entity.Carttable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.Query;
 
-import javax.xml.transform.sax.SAXResult;
-
-public interface CartRepository extends JpaRepository<Carttable, String> {
-
+public interface CartRepository extends JpaRepository<Carttable, Integer> {
+    @Query("{ 'userid' : ?0 }")
+    Carttable findByUserid(int userid);
 }
