@@ -1,7 +1,7 @@
 package com.spacestore.Service;
 import com.spacestore.Entity.Loginuser;
 import com.spacestore.Entity.Userauth;
-import com.spacestore.Entity.userDto;
+import com.spacestore.DTO.userDto;
 
 import java.util.List;
 

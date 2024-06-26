@@ -16,5 +16,7 @@ public class booktable {
     private String instruction;
     private int amount;
     private int sales=0;
+    private boolean deleted;
+    private String ISBN;
 }
 

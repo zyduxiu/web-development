@@ -1,5 +1,5 @@
 package com.spacestore.Service;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 
 public interface BooklistService {
     public bookdto getBooklist(int id);

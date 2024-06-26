@@ -22,4 +22,6 @@ public interface OrderService {
         public statics getbookstastic(Date Startdate,Date Enddate);
 
         public statics getuserstastic(Date Startdate,Date Enddate);
+
+        public statics getuserbookstastic(Date Startdate,Date Enddate);
 }

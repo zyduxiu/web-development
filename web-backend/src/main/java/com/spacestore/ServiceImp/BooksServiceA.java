@@ -3,7 +3,7 @@ import com.spacestore.Dao.BookDao;
 import com.spacestore.Entity.bookimage;
 import com.spacestore.Service.BooksService;
 import com.spacestore.Dao.BookDaos;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 import com.spacestore.Entity.booktable;
 import com.spacestore.repository.Bookimagerepository;
 import com.spacestore.repository.Bookrepository;
@@ -35,6 +35,8 @@ public class BooksServiceA implements BooksService{
             bookDTO.setPrice(book.getPrice());
             bookDTO.setAmount(book.getAmount());
             bookDTO.setInstruction(book.getInstruction());
+            bookDTO.setDeleted(book.isDeleted());
+            bookDTO.setISBN(book.getISBN());
             if (bookimagerepository.findByIdCustom(book.getId()) != null) {
                 bookDTO.setImageUrl(bookimagerepository.findByIdCustom(book.getId()).getImageUrl());
             }
@@ -46,8 +48,11 @@ public class BooksServiceA implements BooksService{
         return bookDaos.returnSearchedbooks(searchtitle);
     }
 
-     public void alterbookInventory(int book_id,String title,String author,int amount,int price,String imageUrl,String instruction){
+     public boolean alterbookInventory(int book_id,String title,String author,int amount,int price,String imageUrl,String instruction,String ISBN){
             booktable book = bookrepository.findByBookid(book_id);
+            if(bookrepository.findByTitle(title)!=null){
+                return false;
+            }
             if(instruction!=null) {
                 book.setInstruction(instruction);
             }
@@ -63,22 +68,31 @@ public class BooksServiceA implements BooksService{
             if(amount!=-1) {
                 book.setAmount(amount);
             }
+            if(ISBN!=null){
+                book.setISBN(ISBN);
+            }
             bookrepository.save(book);
             bookimage bookimage=bookimagerepository.findByIdCustom(book_id);
             if(imageUrl!=null) {
                 bookimage.setImageUrl(imageUrl);
             }
             bookimagerepository.save(bookimage);
+            return true;
     }
 
-    public void addBook(String title,String author,int amount,int price,String imageUrl,String instruction){
+    public boolean addBook(String title,String author,int amount,int price,String imageUrl,String instruction,String ISBN){
         booktable newbook=new booktable();
+        if(bookrepository.findByTitle(title)!=null){
+            return false;
+        }
         newbook.setTitle(title);
         newbook.setAuthor(author);
         newbook.setPrice(price);
         newbook.setAmount(amount);
         newbook.setInstruction(instruction);
         newbook.setSales(0);
+        newbook.setDeleted(false);
+        newbook.setISBN(ISBN);
         bookrepository.save(newbook);
         bookimage newimage=new bookimage();
         List<booktable> tmp=bookrepository.findByTitleLike(title);
@@ -87,13 +101,13 @@ public class BooksServiceA implements BooksService{
         newimage.setImageUrl(imageUrl);
         newimage.setBook_id(id);
         bookimagerepository.save(newimage);
+        return true;
     }
 
     public void deleteInventory(int id){
         booktable delbook=new booktable();
         delbook=bookrepository.findByBookid(id);
-        bookrepository.delete(delbook);
-        bookimage delimage=bookimagerepository.findByIdCustom(id);
-        bookimagerepository.delete(delimage);
+        delbook.setDeleted(!delbook.isDeleted());
+        bookrepository.save(delbook);
     }
 }

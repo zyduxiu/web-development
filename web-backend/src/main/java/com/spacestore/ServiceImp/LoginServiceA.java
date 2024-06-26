@@ -3,7 +3,7 @@ import com.spacestore.Default.defaultpic;
 import com.spacestore.Entity.UserImage;
 import com.spacestore.Entity.UserTable;
 import com.spacestore.Entity.Userauth;
-import com.spacestore.Entity.userDto;
+import com.spacestore.DTO.userDto;
 import com.spacestore.Service.Loginservice;
 import com.spacestore.repository.UserImageRepository;
 import com.spacestore.repository.UserTableRepository;

@@ -1,6 +1,5 @@
 package com.spacestore.Dao;
-import com.spacestore.Entity.bookdto;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 import java.util.List;
 public interface BookDaos {
     public bookdto returnBookdto(int id);

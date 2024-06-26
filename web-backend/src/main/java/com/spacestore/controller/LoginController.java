@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,24 +33,27 @@ private Jwtutil jwtutil;
 
     @CrossOrigin
     @PostMapping("/process-login")
-    public ResponseEntity<returninformation> iflogin(@RequestBody logininformation pd) {
+    public ResponseEntity<?> iflogin(@RequestBody logininformation pd) {
         Userauth user = LoginService.checkLogin(pd.getUsername(), pd.getPassword());
-        returninformation returninformation=new returninformation();
-        if (user != null&&userTableRepository.findById(user.getId()).getForbid()) {
+        returninformation returninformation = new returninformation();
+
+        if (user != null && !userTableRepository.findById(user.getId()).getForbid()) {
+            // 用户被禁止
+            return new ResponseEntity<>("User is forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        if (user != null && userTableRepository.findById(user.getId()).getForbid()) {
+            // 登录成功
             SessionUtils.setSession(user);
             returninformation.setUsername(user.getUsername());
             returninformation.setUserType(user.getRoles());
-          //  String x=request.getSession().getId();
-          //  HttpSession sessionUtils=SessionUtils.getSession();
-          //  SessionUtils.setSession(user);
             return ResponseEntity.ok(returninformation);
-        } else {
-            Userauth userAuth = new Userauth();
-            userAuth.setPassword(pd.getPassword());
-            userAuth.setUsername(pd.getUsername());
-            return ResponseEntity.badRequest().body(returninformation);
         }
+
+        // 登录失败
+        return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
     }
+
     @CrossOrigin
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody signupinformation pd){
@@ -68,6 +72,14 @@ private Jwtutil jwtutil;
     public String login(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", "用户未登录，请登录");
         return "rr";
+    }
+
+    @CrossOrigin
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request){
+        HttpSession session=request.getSession(false);
+        session.invalidate();
+        return ResponseEntity.ok("ok");
     }
 
     @Data

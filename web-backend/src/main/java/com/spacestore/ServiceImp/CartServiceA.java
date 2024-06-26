@@ -60,6 +60,9 @@ Bookrepository bookrepository;
             if(cartItem.getAmount()>bookrepository.findByBookid(cartItem.getBookid()).getAmount()){
                 return false;
             }
+            if(bookrepository.findByBookid(cartItem.getBookid()).isDeleted()){
+                return false;
+            }
         }
         //orderRepository.save(tmp);
         for(CartItem cart:carttable.getCartItems()){

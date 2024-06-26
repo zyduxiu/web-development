@@ -29,7 +29,7 @@ public class getStastics {
         Date Startdate=new Date();
         Date Enddate=new Date();
         if(startdate!=null) {
-                Startdate = isoFormat.parse(startdate);
+            Startdate = isoFormat.parse(startdate);
         }
         if(enddate!=null) {
             Enddate = isoFormat.parse(enddate);
@@ -84,6 +84,27 @@ public class getStastics {
         }
         else{
             return orderService.getuserstastic(null,null);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/getAllUserBookStastics")
+    statics getuserbookstastic(@RequestParam(value = "startdate", required = false) String startdate,
+                           @RequestParam(value = "enddate", required = false) String enddate) throws ParseException {
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        Date Startdate=new Date();
+        Date Enddate=new Date();
+        if(startdate!=null) {
+            Startdate = isoFormat.parse(startdate);
+        }
+        if(enddate!=null) {
+            Enddate = isoFormat.parse(enddate);
+        }
+        if(startdate!=null&&enddate!=null) {
+            return orderService.getuserbookstastic(Startdate,Enddate);
+        }
+        else{
+            return orderService.getuserbookstastic(null,null);
         }
     }
 }

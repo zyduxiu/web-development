@@ -2,7 +2,7 @@ package com.spacestore.controller;
 
 import com.spacestore.Dao.UserDaos;
 import com.spacestore.Entity.UserTable;
-import com.spacestore.Entity.userDto;
+import com.spacestore.DTO.userDto;
 import com.spacestore.Service.Loginservice;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -23,8 +23,11 @@ public class getUserController {
     Loginservice loginservice;
     @CrossOrigin
     @GetMapping("/getuser")
-    public userDto getuser(String username){
-        return userDaos.getuserDto(username);
+    public userDto getuser(HttpServletRequest request,String username){
+        HttpSession session=request.getSession(false);
+        Object userName=session.getAttribute("userName");
+        String username1=userName.toString();
+        return userDaos.getuserDto(username1);
     }
 
     @CrossOrigin

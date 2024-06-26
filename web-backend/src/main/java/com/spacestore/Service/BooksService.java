@@ -1,6 +1,6 @@
 package com.spacestore.Service;
 import java.util.List;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,9 +9,9 @@ public interface BooksService {
 
     public List<bookdto>getSearchBooks(String searchtitle);
 
-    public void alterbookInventory(int book_id,String title,String author,int amount,int price,String imageUrl,String instruction);
+    public boolean alterbookInventory(int book_id,String title,String author,int amount,int price,String imageUrl,String instruction,String ISBN);
 
-    public void addBook(String title,String author,int amount,int price,String imageUrl,String instruction);
+    public boolean addBook(String title,String author,int amount,int price,String imageUrl,String instruction,String ISBN);
 
     public void deleteInventory(int id);
 }

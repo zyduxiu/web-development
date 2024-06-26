@@ -26,8 +26,11 @@ public class AlterbookController {
         int price=pd.getPrice();
         String imageUrl=pd.getImageUrl();
         String instruction=pd.getInstruction();
-        booksService.addBook(title,author,amount,price,imageUrl,instruction);
-        return ResponseEntity.ok("Data received successfully!");
+        String ISBN=pd.getISBN();
+        if(booksService.addBook(title,author,amount,price,imageUrl,instruction,ISBN)) {
+            return ResponseEntity.ok("Data received successfully!");
+        }
+        return ResponseEntity.badRequest().body("false");
     }
 
     @Data
@@ -38,6 +41,7 @@ public class AlterbookController {
         private int price;
         private String imageUrl;
         private String instruction;
+        private String ISBN;
     }
 
 }

@@ -3,7 +3,7 @@ package com.spacestore.Dao;
 import com.spacestore.repository.Bookimagerepository;
 import com.spacestore.repository.Bookrepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 import com.spacestore.Entity.booktable;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +24,8 @@ public class BookDao implements BookDaos{
         book.setPrice(bookrepository.getReferenceById(id).getPrice());
         book.setInstruction(bookrepository.getReferenceById(id).getInstruction());
         book.setAmount(bookrepository.getReferenceById(id).getAmount());
+        book.setDeleted(bookrepository.getReferenceById(id).isDeleted());
+        book.setISBN(bookrepository.getReferenceById(id).getISBN());
        // System.out.println(book.getPrice());
         if(bookimagerepository.findByIdCustom(id)!=null){
             book.setImageUrl(bookimagerepository.findByIdCustom(id).getImageUrl());
@@ -43,7 +45,8 @@ public class BookDao implements BookDaos{
             bookDTO.setPrice(book.getPrice());
             bookDTO.setAmount(book.getAmount());
             bookDTO.setInstruction(book.getInstruction());
-
+            bookDTO.setDeleted(book.isDeleted());
+            bookDTO.setISBN(book.getISBN());
             if (bookimagerepository.findByIdCustom(book.getId()) != null) {
                 bookDTO.setImageUrl(bookimagerepository.findByIdCustom(book.getId()).getImageUrl());
             }
@@ -64,7 +67,8 @@ public class BookDao implements BookDaos{
             bookDTO.setPrice(book.getPrice());
             bookDTO.setAmount(book.getAmount());
             bookDTO.setInstruction(book.getInstruction());
-
+            bookDTO.setDeleted(book.isDeleted());
+            bookDTO.setISBN(book.getISBN());
             if (bookimagerepository.findByIdCustom(book.getId()) != null) {
                 bookDTO.setImageUrl(bookimagerepository.findByIdCustom(book.getId()).getImageUrl());
             }

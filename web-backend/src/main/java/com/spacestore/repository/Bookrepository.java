@@ -19,5 +19,10 @@ public interface Bookrepository extends JpaRepository<booktable, Integer> {
     @Query("select b FROM booktable b WHERE b.id = :bookid")
     booktable findByBookid(@Param("bookid") int bookid);
 
+    @Query("SELECT b FROM booktable b WHERE b.title = :searchTerm")
+    booktable findByTitle(@Param("searchTerm") String searchTerm);
+
+
+
 
 }

@@ -8,6 +8,7 @@ import com.spacestore.repository.UserTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.spacestore.Default.defaultpic;
+import com.spacestore.DTO.userDto;
 @Service
 public class UserDao implements UserDaos {
     @Autowired

@@ -244,5 +244,37 @@ public class OrderServiceA implements OrderService {
         }
         return result;
     }
+    public statics getuserbookstastic(Date Startdate,Date Enddate){
+        List<ordertable> table=new ArrayList<>();
+        List<ordertable> intime=new ArrayList<>();
+        int totalcost=0;
+        int totalamount=0;
+        statics result=new statics();
+        table=orderRepository.findAll();
+        if (Startdate == null) {
+            intime = table;
+        }
+        else{
+            for (ordertable order : table) {
+                if (order.getTime().compareTo(Startdate) >= 0 && order.getTime().compareTo(Enddate) <= 0) {
+                    intime.add(order);
+                }
+            }
+        }
+        for(ordertable order:intime) {
+            Userauth userauth=order.getLoginuser();
+            String username=userauth.getUsername();
+            for(orderItem orderItem:order.getOrderItems()){
+                booktable book=new booktable();
+                int price=0;
+                if(bookrepository.findByBookid(orderItem.getBook_id())!=null){
+                    book=bookrepository.findByBookid(orderItem.getBook_id());
+                    price=book.getPrice();
+                }
+                result.addBookInList(username,orderItem.getAmount());
+            }
+        }
+        return result;
+    }
 }
 

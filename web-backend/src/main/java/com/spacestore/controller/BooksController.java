@@ -1,6 +1,6 @@
 package com.spacestore.controller;
 import java.util.List;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 import com.spacestore.Service.BooksService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +38,16 @@ public class BooksController {
          String author=pd.getAuthor();
          int price=pd.getPrice();
          int amount=pd.getAmount();
+         String ISBN=pd.getIsbn();
          String imageUrl=pd.getImageUrl();
          String instruction=pd.getInstruction();
          System.out.println(id);
          System.out.println(amount);
-         booksService.alterbookInventory(id,title,author,amount,price,imageUrl,instruction);
-         return ResponseEntity.ok("Data received successfully!");
+         if(booksService.alterbookInventory(id,title,author,amount,price,imageUrl,instruction,ISBN)){
+             return  ResponseEntity.ok("Data received successfully!");
+         }
+         ;
+         return ResponseEntity.badRequest().body("false");
     }
 
     @CrossOrigin
@@ -63,6 +67,7 @@ public class BooksController {
         int price;
         String imageUrl;
         String instruction;
+        String isbn;
     }
 
     @Data

@@ -1,5 +1,5 @@
 package com.spacestore.controller;
-import com.spacestore.Entity.bookdto;
+import com.spacestore.DTO.bookdto;
 import com.spacestore.Service.BooklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
