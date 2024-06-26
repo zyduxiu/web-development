@@ -1,18 +1,15 @@
-// //import logo from './logo.svg';
-// import './css/App.css';
-// import router from "../src/component/router";
-// import { ConfigProvider, theme } from 'antd';
-// function App() {
-//     const themeToken = {
-//         colorPrimary: "#1DA57A",
-//         colorInfo: "#1DA57A"
-//     }
-//     return <ConfigProvider theme={{
-//         algorithm: theme.defaultAlgorithm,
-//         token: themeToken
-//     }} >
-//         <router/>
-//     </ConfigProvider>
-//   }
-//
-// export default App;
+import React from "react";
+import { BrowserRouter as router, Routes, Route } from "react-router-dom";
+import MemberProfile from "./component/MemberProfile";
+
+function App() {
+  return (
+    <div className="App">
+      <Routes>
+          <Route path="/profile/:phoneNumber" element={<MemberProfile />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default App;

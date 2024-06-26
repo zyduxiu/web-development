@@ -1,0 +1,16 @@
+.main-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.split-into-left-right{
+    display: flex;
+    flex-direction: row;
+}
+.left-section-sidebar {
+    margin-top: 10px;
+}
+
+.button-pay {
+    margin-bottom: 10px;
+}

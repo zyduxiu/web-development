@@ -1,0 +1,44 @@
+.p{
+    color:aliceblue;
+}
+.list-item{
+    cursor: pointer;
+}
+.margin-from-top{
+    margin-top: 65px;
+}
+.hellobye{
+    cursor: pointer;
+    background-color: white;
+
+}
+.site-layout-background{
+    background-color: white;
+}
+.yoyo{
+    cursor: pointer;
+    background-color: white;
+
+}
+.fixed-header{
+    /* display: flex;
+    flex-direction: row;
+    position: fixed; */
+    z-index: 1000;
+    position: fixed;
+    width: 100%;
+}
+.save-changes-button{
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 20px;
+    background-color:blue;
+    height: 40px;
+    width: 100%;
+}
+.save-changes-button:hover{
+    background-color:rgb(74, 114, 216);
+}
+.member-infor{
+    z-index:100;
+}
