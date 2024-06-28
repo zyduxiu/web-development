@@ -39,23 +39,34 @@ export default function  Homepage ({element}) {
     }
 
 
-    const items = [
-        getItem('Books', '1', <BookOutlined />, '/home'),
-        getItem('My cart', '2', <ShoppingCartOutlined />, '/cart'),
-        getItem('My Orders', '3', <AccountBookOutlined />, '/order'),
-        getItem('My Profile', '4', <UserOutlined />, '/profile'),
-        getItem('Statistic', '10', <BarChartOutlined />, '/manage/statistic'),
-        (localStorage.getItem("userType")==="ADMIN")&&getItem('Stastic Admin','6',<PieChartOutlined />,null,[
-            getItem('Book Stastic','11',<PieChartOutlined />,'/stastic/book'),
-            getItem('User Stastic','12',<BarChartOutlined />,'/stastic/user'),
-        ]),
-        (localStorage.getItem("userType")==="ADMIN")&&getItem('Management', '5', <SecurityScanOutlined />, '/manage', [
-            getItem('Book Management', '7', null, '/manage/book'),
-            getItem('User Management', '8', null, '/manage/register'),
-            getItem('Order Management', '9', null, '/manage/order')
-        ]),
-    ];
-
+    let items=[];
+    if(localStorage.getItem("userType")==="ADMIN"){
+        items= [
+            getItem('Books', '1', <BookOutlined />, '/home'),
+            getItem('My cart', '2', <ShoppingCartOutlined />, '/cart'),
+            getItem('My Orders', '3', <AccountBookOutlined />, '/order'),
+            getItem('My Profile', '4', <UserOutlined />, '/profile'),
+            getItem('Statistic', '10', <BarChartOutlined />, '/manage/statistic'),
+            getItem('Stastic Admin','6',<PieChartOutlined />,null,[
+                getItem('Book Stastic','11',<PieChartOutlined />,'/stastic/book'),
+                getItem('User Stastic','12',<BarChartOutlined />,'/stastic/user'),
+            ]),
+            getItem('Management', '5', <SecurityScanOutlined />, '/manage', [
+                getItem('Book Management', '7', null, '/manage/book'),
+                getItem('User Management', '8', null, '/manage/register'),
+                getItem('Order Management', '9', null, '/manage/order')
+            ]),
+        ];
+    }
+    else {
+        items = [
+            getItem('Books', '1', <BookOutlined/>, '/home'),
+            getItem('My cart', '2', <ShoppingCartOutlined/>, '/cart'),
+            getItem('My Orders', '3', <AccountBookOutlined/>, '/order'),
+            getItem('My Profile', '4', <UserOutlined/>, '/profile'),
+            getItem('Statistic', '10', <BarChartOutlined/>, '/manage/statistic'),
+        ];
+    }
 
     const [collapsed, setCollapsed] = useState(false);
     const {

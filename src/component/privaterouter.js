@@ -17,7 +17,7 @@ const PrivateRoute = ({ element, userTypeRequired, ...rest }) => {
                     console.log(data);
                     setIsAuth(true);
                 }).catch(error=>{
-                        if (error.response && error.response.status === 400) {
+                        if (error.response ) {
                             console.log(response)
                             message.error("请先登录");
                         } else {
@@ -32,7 +32,6 @@ const PrivateRoute = ({ element, userTypeRequired, ...rest }) => {
 
             }
         };
-
         fetchData();
     }, []);
 
@@ -45,7 +44,7 @@ const PrivateRoute = ({ element, userTypeRequired, ...rest }) => {
                         setUserType(1);
                         setType(1);
                     }).catch(error=>{
-                        if (error.response && error.response.status === 400) {
+                        if (error.response ) {
                             console.log(response)
                             //message.error("非管理员不能访问");
                         } else {

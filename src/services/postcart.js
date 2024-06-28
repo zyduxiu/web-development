@@ -1,5 +1,5 @@
 export default async function postcart(pd){
-    let res=await fetch(`http://localhost:8080/submit`,{
+    let res=await fetch(`http://localhost:8080/postcart`,{
         method:'POST',
         headers: {
             'Content-Type': 'application/json',

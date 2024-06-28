@@ -1,97 +1,134 @@
-import React, { useEffect, useState } from 'react';
-import { DatePicker } from 'antd';
-import {ArcElement, Chart, registerables,CategoryScale,LinearScale,BarElement} from 'chart.js';
-import {Bar, Pie,} from 'react-chartjs-2';
-import {getStastic} from "../services/getStastic";
+import React, { useEffect, useState, useRef } from 'react';
+import {Card, Col, DatePicker, Row, Space, Statistic, Table,Radio} from 'antd';
+import { getUserStastic } from "../services/getUserStastic";
+import * as echarts from 'echarts';
 import chroma from 'chroma-js';
-import {getBookStastic} from "../services/getBookStastic";
-import {getUserStastic} from "../services/getUserStastic";
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
-const numDataPoints = 10;
-const colors = chroma.scale(['#ff6384', '#36a2eb', '#cc65fe']).mode('lch').colors(numDataPoints);
+import Column from "antd/es/table/Column";
+import {getUserBookStastic} from "../services/getUserBookStastic";
+const { RangePicker } = DatePicker;
+
 export default function UserStastics() {
-   Chart.register(CategoryScale,LinearScale,BarElement)
     const [stastics, setStastics] = useState(null);
     const [selectedDates, setSelectedDates] = useState([]);
-    const [num,setNum]=useState([]);
-    const [labels,setLabels]=useState([]);
+    const [flag,setFlag]=useState(false);
+    const chartRef = useRef(null);
+
     useEffect(() => {
         const fetchStastics = async () => {
             const information = {
-                startdate:null,
-                enddate:null,
+                startdate: null,
+                enddate: null,
             };
+
             if (selectedDates[0] && selectedDates[1]) {
                 information.startdate = selectedDates[0].toISOString();
                 information.enddate = selectedDates[1].toISOString();
             }
-            else {
-                information.startdate=null;
-                information.enddate=null;
-            }
-            console.log("here");
+            const data2=await getUserBookStastic(information);
             const data = await getUserStastic(information);
-            setStastics(data);
-            data.bookInfoList?setNum(data.bookInfoList.map(book=>book.second)):setNum(null);
-            data.bookInfoList?setLabels(data.bookInfoList.map(book=>book.first)):setLabels(null);
+            console.log(data);
+            console.log(data2);
+            if(data.bookInfoList!==null) {
+                // 对数据进行排序
+                data.bookInfoList.sort((a, b) => b.second - a.second);
+            }
+            let result=[];
+            if(data.bookInfoList!==null&&data2.bookInfoList!==null) {
+                data.bookInfoList.map(amount => {
+                    data2.bookInfoList.map(book => {
+                            if (book.first === amount.first) {
+                                const tmp = {
+                                    name: book.first,
+                                    second: book.second,
+                                    third: amount.second/100,
+                                }
+                                result.push(tmp);
+                            }
+                        }
+                    )
+                })
+                console.log("here1")
+                setStastics(result);
+            }
+            else{
+                setStastics(null);
+            }
+            setFlag(false);
+            console.log(result);
+
         };
 
         fetchStastics();
-    }, [selectedDates]); // 依赖项正确设置
+    }, [selectedDates]);
 
-    const defaultData = {
-        labels: ['无购书记录'],
-        datasets: [
-            {
-                label: '无购书',
-                data: [0], // 默认数据点
-                backgroundColor: '#ddd', // 默认背景颜色
-            }
-        ]
-    };
-    const generateData = (bookInfoList) => {
-        if(num.length===0){
-            return defaultData;
-        }
-        const data = {
-            labels: labels, // 饼图的每个部分的标签
-            datasets: [
+
+    console.log(flag);
+    useEffect(() => {
+        // 基于准备好的dom，初始化echarts实例
+        const myChart = echarts.init(chartRef.current);
+
+        // 指定图表的配置项和数据
+        const option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['总额','数量']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: stastics?.map(item => item.name) || [],
+                boundaryGap: true
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
                 {
-                    data: num,
-                    backgroundColor:chroma.scale(['#ff6384', '#36a2eb', '#cc65fe']).mode('lch').colors(num.length), // 每个部分的背景颜色
-
+                    name: flag?'数量':'总额',
+                    type: 'bar',
+                    data: flag?stastics?.map(item => item.second) || []:stastics?.map(item => item.third) || [],
+                    itemStyle: {
+                        color: function (params) {
+                            return chroma.scale(['#ff6384', '#36a2eb', '#cc65fe']).mode('lch').colors(stastics?.length)[params.dataIndex];
+                        }
+                    }
                 }
             ]
         };
-        return data;
-    };
+        myChart.setOption(option);
 
+        return () => myChart.dispose();
+    }, [stastics]);
 
-
-
-    const options = {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                enabled: true,
-                callbacks: {
-                    title: (context) => {
-                        // 返回当前数据点的标签
-                        return context[0].label;
-                    },
-                    label: (context) => {
-                        // 返回当前数据点的值
-                        return `数量: ${context.parsed.y}`;
-                    }
-                }
-            },
-            // legend: {
-            //     position: 'top',
-            // },
+    const handleChange=()=>{
+        if(stastics) {
+            let sortedStastics = [...stastics]; // 创建一个新的数组副本
+            if (flag === false) {
+                sortedStastics.sort((a, b) => b.second - a.second);
+            }
+            if (flag === true) {
+                sortedStastics.sort((a, b) => b.third - a.third);
+            }
+            setStastics(sortedStastics); // 设置新的状态
+            setFlag(!flag); // 切换flag的值
         }
-    };
+    }
 
 
+  //  console.log(stastics);
+    useEffect(() => {
+
+    }, [flag]);
     const onDateChange = (dates) => {
         if (dates) {
             setSelectedDates(dates);
@@ -104,39 +141,41 @@ export default function UserStastics() {
     };
 
     console.log(stastics)
-    if(stastics!==null) {
-        return (
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row'
-                }}>
-                    <b style={{
-                        fontSize: '2rem',
-                        paddingLeft: '1%'
-                    }}>User</b>
-                    <b style={{
-                        fontSize: '2rem',
-                        paddingLeft: '1%'
-                    }}>Stastic</b>
-                    <RangePicker style={{
-                        marginLeft: '55%',
-                        marginTop: '0.23%'
-                    }} onChange={onDateChange}/>
+    return (
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+                <div>
+                    <b style={{fontSize: '2rem'}}>User</b>
+                    <b style={{fontSize: '2rem', paddingLeft: '1%'}}>Stastic</b>
                 </div>
-                {stastics && (
-                    <div>
-                        <Bar data={stastics.bookInfoList ? generateData(stastics.bookInfoList) : defaultData}
-                             options={options} style={{
-                            width: "40%",
-                            height: "40%",
-                        }} />
-                    </div>
-                )}
+                <RangePicker style={{marginTop: '0.23%'}} onChange={onDateChange}/>
             </div>
-        );
-    }
+
+            <Card style={{width: '100%'}}>
+                <Row justify="space-around" align="top" style={{marginTop: '2%'}}>
+                    <Col span={12}>
+                        <div style={{position: 'relative', width: 600, height: 500}} ref={chartRef}></div>
+                    </Col>
+                    <Col span={12}>
+                        <Radio.Group value={flag?"b":"a"}
+                                     onChange={handleChange}
+                                     style={{
+                            marginLeft:'25%'
+                        }}>
+                            <Radio.Button value="a">根据金额排序</Radio.Button>
+                            <Radio.Button value="b">根据数量排序</Radio.Button>
+                        </Radio.Group>
+
+                            <Table dataSource={stastics} style={{marginTop: '2%'}}>
+                                <Column title="User" dataIndex="name" key="name"/>
+                                <Column title="Total Amount" dataIndex="second" key="second"/>
+                                <Column title="Total Price" dataIndex="third" key="third"/>
+                                {/* 根据实际数据结构添加更多的列 */}
+                            </Table>
+
+                    </Col>
+                </Row>
+            </Card>
+        </div>
+    );
 }

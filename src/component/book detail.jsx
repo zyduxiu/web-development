@@ -155,7 +155,7 @@ function BookDetail(targetId) {
                             作者: {book.author}
                         </text>
                         <text style={{marginLeft: '60px', fontSize: '1.2rem', fontFamily: "楷体"}}>
-                            销量:
+                            ISBN: {book.isbn}
                         </text>
                         <text style={{marginLeft: '100px', fontSize: '1.2rem', fontFamily: "楷体"}}>
                             作品介绍:
@@ -172,21 +172,21 @@ function BookDetail(targetId) {
                                 <text
                                     style={{fontSize: '1rem', color: 'red', marginTop: '10px', marginLeft: '60px'}}>￥
                                 </text>
-                                <text style={{fontSize: '2rem', color: 'red'}}>{book.price}</text>
+                                <text style={{fontSize: '2rem', color: 'red'}}>{book.price/100}</text>
                             </div>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'row'}}>
                             <text style={{marginLeft: '60px', fontSize: '1.2rem', fontFamily: "楷体"}}>
                                 库存:
                             </text>
-                            <text style={{fontSize: '1.2rem', color: 'red', marginLeft: '5px'}}>{book.amount}</text>
+                            <text style={{fontSize: '1.2rem', color: 'red', marginLeft: '5px'}}>{book.deleted?"已下架":book.amount}</text>
                         </div>
                         <div>
-                            <Button size='large' style={{
+                            {!book.deleted&&<Button size='large' style={{
                                 marginTop: '50px',
                             }}
                                     onClick={()=>showModal2()}
-                            >加入购物车</Button>
+                            >加入购物车</Button>}
                             <Modal
                                 title="Submit your cart"
                                 visible={open2}
@@ -210,7 +210,7 @@ function BookDetail(targetId) {
                                     </Form.Item>
                                 </Form>
                             </Modal>
-                            <Button style={{marginLeft: '25px'}} onClick={()=>showModal()} size='large' type='primary'>在线购买</Button>
+                            {!book.deleted&&<Button style={{marginLeft: '25px'}} onClick={()=>showModal()} size='large' type='primary'>在线购买</Button>}
                             <Modal
                                 title="Submit your order"
                                 visible={open}

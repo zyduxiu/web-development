@@ -33,13 +33,34 @@ export default function Loginpage(){
     const handleEmail=(e)=>{
         setEmail(e.target.value);
     }
-    const user= {
-        username:username,
-        password:password,
+
+    async function hashPassword(password) {
+
+        const passwordBuffer = new TextEncoder().encode(password);
+        const hashedPassword = await crypto.subtle.digest(
+            'SHA-256',
+            passwordBuffer
+        );
+        const base64HashedPassword = btoa(String.fromCharCode.apply(null, new Uint8Array(hashedPassword)));
+
+        return base64HashedPassword;
     }
 
+
+    let user={
+        username:username,
+        password:password
+    }
+    hashPassword(password).then((hashedpassword) => {
+        user = {
+            username:username,
+            password:hashedpassword,
+        };
+    });
     const  signupUser=async (signup)=>{
         try {
+            let hashedpassword=await hashPassword(password);
+            signup.password=hashedpassword;
             // 假设signupUser是一个返回Promise的函数
             let data = await postUser(signup);
             message.success("新用户注册成功")
@@ -53,10 +74,10 @@ export default function Loginpage(){
         }
 
     }
-    const handleSignup= ()=>{
+    const handleSignup= async ()=>{
         form2.validateFields().then( values=>
         {
-            const signup = {
+            let signup = {
                 username: username,
                 email: email,
                 password: password
@@ -80,18 +101,25 @@ export default function Loginpage(){
     }
     function handlejudge(jwt){
         console.log(jwt)
-        if(jwt.ok){
+        if(jwt.ok&&jwt.ok===true){
             message.success('登陆成功！')
             message.success(`欢迎您 , ${username}`)
             navigate("/home");
         }
         else{
-            message.error({
-                content: '登录失败，请重试！',
-                duration: 3,  // 消息显示3秒
-
-            });
-
+            console.log(jwt.status)
+            if(jwt.status===401) {
+                message.error({
+                    content: '账号密码错误，请重试',
+                    duration: 3,  // 消息显示3秒
+                });
+            }
+            else{
+                message.error({
+                    content: '账户已禁用，请联系管理员',
+                    duration: 3,  // 消息显示3秒
+                });
+            }
         }
     }
 

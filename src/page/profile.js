@@ -16,14 +16,16 @@ import "../css/home.css"
 import Profilelist from "../component/profilelist";
 import {Button} from "antd";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import {Logout} from "../services/Logout";
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
 let username=localStorage.getItem('username');
 
 export default function  Profilepage ({element}) {
 
-    function logout(){
+    async function logout(){
         message.success("登出成功")
+        let a=await Logout();
     }
 
     const navigate = useNavigate();
@@ -41,24 +43,34 @@ export default function  Profilepage ({element}) {
         };
     }
 
-
-    const items = [
-        getItem('Books', '1', <BookOutlined />, '/home'),
-        getItem('My cart', '2', <ShoppingCartOutlined />, '/cart'),
-        getItem('My Orders', '3', <AccountBookOutlined />, '/order'),
-        getItem('My Profile', '4', <UserOutlined />, '/profile'),
-        getItem('Statistic', '10', <BarChartOutlined />, '/manage/statistic'),
-        (localStorage.getItem("userType")==="ADMIN")&&getItem('Stastic Admin','6',<PieChartOutlined />,null,[
-            getItem('Book Stastic','11',<PieChartOutlined />,'/stastic/book'),
-            getItem('User Stastic','12',<BarChartOutlined />,'/stastic/user'),
-        ]),
-        (localStorage.getItem("userType")==="ADMIN")&&getItem('Management', '5', <SecurityScanOutlined />, '/manage', [
-            getItem('Book Management', '7', null, '/manage/book'),
-            getItem('User Management', '8', null, '/manage/register'),
-            getItem('Order Management', '9', null, '/manage/order')
-        ]),
-    ];
-
+    let items=[];
+    if(localStorage.getItem("userType")==="ADMIN"){
+        items= [
+            getItem('Books', '1', <BookOutlined />, '/home'),
+            getItem('My cart', '2', <ShoppingCartOutlined />, '/cart'),
+            getItem('My Orders', '3', <AccountBookOutlined />, '/order'),
+            getItem('My Profile', '4', <UserOutlined />, '/profile'),
+            getItem('Statistic', '10', <BarChartOutlined />, '/manage/statistic'),
+            getItem('Stastic Admin','6',<PieChartOutlined />,null,[
+                getItem('Book Stastic','11',<PieChartOutlined />,'/stastic/book'),
+                getItem('User Stastic','12',<BarChartOutlined />,'/stastic/user'),
+            ]),
+            getItem('Management', '5', <SecurityScanOutlined />, '/manage', [
+                getItem('Book Management', '7', null, '/manage/book'),
+                getItem('User Management', '8', null, '/manage/register'),
+                getItem('Order Management', '9', null, '/manage/order')
+            ]),
+        ];
+    }
+    else {
+         items = [
+            getItem('Books', '1', <BookOutlined/>, '/home'),
+            getItem('My cart', '2', <ShoppingCartOutlined/>, '/cart'),
+            getItem('My Orders', '3', <AccountBookOutlined/>, '/order'),
+            getItem('My Profile', '4', <UserOutlined/>, '/profile'),
+            getItem('Statistic', '10', <BarChartOutlined/>, '/manage/statistic'),
+        ];
+    }
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -73,7 +85,6 @@ export default function  Profilepage ({element}) {
                 <div className="demo-logo-vertical" />
                 <Menu theme="dark" defaultSelectedKeys={['4']} mode="inline">
                     {items.map(item => (
-                        // 如果当前菜单项有子菜单项，渲染 SubMenu，否则渲染普通的 Menu.Item
                         item.children ? (
                             <Menu.SubMenu key={item.key} title={item.label} icon={item.icon}>
                                 {item.children.map(subItem => (

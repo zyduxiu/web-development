@@ -23,6 +23,16 @@ export default function Cartlist(){
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [modalText, setModalText] = useState('Content of the modal');
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(3);
+    const [totalOrders, setTotalOrders] = useState(0);
+
+    const handleTableChange = (pagination, filters, sorter) => {
+        // 更新页码和每页显示数量
+        setCurrentPage(pagination);
+    };
+
     useEffect(() => {
     }, [open]);
     useEffect(()=>{
@@ -47,8 +57,6 @@ export default function Cartlist(){
         buyer:buyer,
         phonenumber:number,
         address:address,
-        carts:carts,
-        username:username,
     }
     const phoneRegex = /^[1][3,4,5,7,8,9][0-9]{9}$/;
     const handleOk = () => {
@@ -90,12 +98,17 @@ export default function Cartlist(){
         setOpen(false);
     };
     const fetchCarts=async ()=>{
-        let lists = await getcart(username);
-        setCarts(lists);
-        console.log(lists);
-        const bookIds=lists.cartItems.map(item=>item.bookid);
+        const inf={
+            page:currentPage-1,
+            size:pageSize,
+        }
+        let lists = await getcart(inf);
+        console.log(lists.content);
+        const bookIds=lists.content.map(item=>item.bookid);
         console.log(bookIds);
         fetchBook(bookIds);
+        setCarts(lists.content);
+        setTotalOrders(lists.totalElements);
         // setImageUrl(lists.imageUrl);
     }
 
@@ -110,7 +123,7 @@ export default function Cartlist(){
         message.success('购物车项已成功删除');
     }
     useEffect(()=>{
-        fetchCarts();},[username]);
+        fetchCarts();},[username,currentPage]);
 
     const fetchBook=async (targetId)=>{
         console.log(targetId);
@@ -155,31 +168,68 @@ export default function Cartlist(){
                 {/*</Search>*/}
                 <Table dataSource={book} style={{
                     marginTop: '2%'
+                }} pagination={{
+                    current: currentPage,
+                    pageSize: pageSize,
+                    total: totalOrders,
+                    onChange: handleTableChange
                 }}>
                     <ColumnGroup title="Name">
-                        <Column title="Cover" dataIndex="cover" key="cover" render={(cover, record) => (
-                            <>
-                                <Link to={`/book/${record.id}`}>
-                                    <img src={record.imageUrl} alt="图片" style={{width: '100px', height: '120px'}}/>
-                                </Link>
-                            </>
-                        )}/>
+                        <Column
+                            title="Cover"
+                            dataIndex="cover"
+                            key="cover"
+                            render={(cover, record) => (
+                                <>
+                                    {!record.deleted && (
+                                        <Link to={`/book/${record.id}`}>
+                                            <img src={record.imageUrl} alt="图片" style={{ width: '100px', height: '120px' }} />
+                                        </Link>
+                                    )}
+                                    {record.deleted && (
+                                        <div style={{ position: 'relative', width: '100px', height: '120px' }}>
+                                            <img src={record.imageUrl} alt="图片" style={{ width: '100px', height: '120px' }} />
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                fontSize: '14px', // Adjusted font size for better visibility
+                                                color: 'red',
+                                                fontWeight: 'bold',
+                                            }}>
+                                                书籍已下架
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+
                         <Column title="Title" dataIndex="title" key="title"/>
                     </ColumnGroup>
-                    <Column title="Amount" dataIndex="amount" key="amount" render={(id,record)=>{
+                    <Column title="Amount" dataIndex="amount" key="amount" render={(id, record) => {
                         console.log(record);
-                        let amount=0;
-                        carts.cartItems.map(cart=>{
-                            if(cart.bookid === record.id) {
-                                amount=cart.amount;
+                        let amount = 0;
+                        carts.map(cart => {
+                            if (cart.bookid === record.id) {
+                                amount = cart.amount;
                             }
                         })
                         return amount;
                     }}/>
-                    <Column title="Price" dataIndex="price" key="price"/>
-                    <Column title="Action" dataIndex="action" key="action" render={(id,record) => {
+                    <Column title="Price" dataIndex="price" key="price"  render={(id,record)=>{
+                        console.log(record)
+                        return record.price/100;
+                    }}/>
+                    <Column title="Action" dataIndex="action" key="action" render={(id, record) => {
                         console.log(record.id);
-                        return(
+                        return (
                             <>
                                 <Button type="primary" onClick={()=>handledelete(record.id)}>Delete</Button>
                             </>

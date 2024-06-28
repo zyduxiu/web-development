@@ -11,6 +11,9 @@ export async function handleAllSearchedOrders(search){
         query += `&enddate=${encodeURIComponent(search.enddate)}`;
     }
 
+    query += `&page=${encodeURIComponent(search.page)}`;
+    query += `&size=${encodeURIComponent(search.size)}`;
+
     let res = await fetch(`http://localhost:8080/searchallthings?${query}`,{credentials: "include",});
     return res.json();
 }
