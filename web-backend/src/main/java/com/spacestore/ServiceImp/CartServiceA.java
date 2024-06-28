@@ -5,6 +5,10 @@ import com.spacestore.Service.CartService;
 import com.spacestore.repository.*;
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,15 +20,35 @@ import com.spacestore.repository.UserauthRepository;
 public class CartServiceA implements CartService{
     @Resource
     UserauthRepository userauthRepository;
+
+    @Resource
+    UserTableRepository userTableRepository;
+
 @Resource
 Bookrepository bookrepository;
     @Resource
     CartRepository cartRepository;
     @Resource
     OrderRepository orderRepository;
-    public Carttable getCart(String user){
+    public Page<CartItem> getCart(String user, Pageable pageable){
         Userauth userauth=userauthRepository.findByUsername(user);
-        return userauth.getcart();
+        List<CartItem> cartItems=userauth.getcart().getCartItems();
+        int totalElements = cartItems.size();
+        Sort sort = pageable.getSort();
+        int pageSize = pageable.getPageSize();
+        int pageNumber = pageable.getPageNumber();
+        int startOffset = pageNumber * pageSize;
+
+        if (startOffset >= totalElements) {
+            startOffset = 0;
+        }
+
+        List<CartItem> pagedResult = new ArrayList<>();
+        for (int i = startOffset; i < Math.min(startOffset + pageSize, totalElements); i++) {
+            pagedResult.add(cartItems.get(i));
+        }
+
+        return new PageImpl<>(pagedResult, pageable, totalElements);
     }
 
     public CartItem findByBookid(Carttable carts,int bookid){
@@ -41,7 +65,7 @@ Bookrepository bookrepository;
     }
 
 @Transactional
-    public boolean submitCart(String buyer,String phonenumber,String address,Carttable carts,String username){
+    public boolean submitCart(String buyer,String phonenumber,String address,String username){
         ordertable tmp=new ordertable();
         Userauth userauth=userauthRepository.findByUsername(username);
 
@@ -52,7 +76,8 @@ Bookrepository bookrepository;
         tmp.setLoginuser(userauthRepository.findByUsername(username));
         tmp.setBuyer(buyer);
         List<orderItem> tmpp=new ArrayList<>();
-        Carttable carttable=cartRepository.findByUserid(carts.getUserid());
+        Userauth loginuser=userauthRepository.findByUsername(username);
+        Carttable carttable=loginuser.getcart();
         if(carttable.getCartItems()==null||carttable.getCartItems().size()==0){
             return true;
         }

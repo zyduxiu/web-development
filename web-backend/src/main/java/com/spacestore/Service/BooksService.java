@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 public interface BooksService {
     public Page<bookdto> getBooks(Pageable pageable);
 
-    public List<bookdto>getSearchBooks(String searchtitle);
+    public Page<bookdto>getSearchBooks(String searchtitle,Pageable pageable);
 
     public boolean alterbookInventory(int book_id,String title,String author,int amount,int price,String imageUrl,String instruction,String ISBN);
 

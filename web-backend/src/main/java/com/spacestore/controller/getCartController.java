@@ -17,16 +17,15 @@ public class getCartController {
     @Autowired
     CartService cartService;
     @CrossOrigin
-    @PostMapping("/submit")
+    @PostMapping("/postcart")
     public ResponseEntity<String> checkRequest(@RequestBody cartInformation pd, HttpServletRequest request){
         System.out.println("Received name: " + pd.getBuyer());
         System.out.println("Received phonenumber: " + pd.getPhonenumber());
         System.out.println("Received address: " + pd.getAddress());
-        System.out.println("Received carts: "+pd.getCarts());
         HttpSession session=request.getSession(false);
         Object userName=session.getAttribute("userName");
         String username=userName.toString();
-        if(cartService.submitCart(pd.getBuyer(),pd.getPhonenumber(),pd.getAddress(),pd.getCarts(),username)) {
+        if(cartService.submitCart(pd.getBuyer(),pd.getPhonenumber(),pd.getAddress(),username)) {
             return ResponseEntity.ok("Data received successfully!");
         }
         else{
@@ -38,7 +37,5 @@ public class getCartController {
         private String buyer;
         private String phonenumber;
         private String address;
-        private Carttable carts;
-        private String username;
     }
 }

@@ -1,5 +1,5 @@
 package com.spacestore.ServiceImp;
-import com.spacestore.Dao.BookDao;
+import com.spacestore.DaoImpl.BookDao;
 import com.spacestore.Entity.bookimage;
 import com.spacestore.Service.BooksService;
 import com.spacestore.Dao.BookDaos;
@@ -44,8 +44,8 @@ public class BooksServiceA implements BooksService{
         });
     }
 
-    public List<bookdto> getSearchBooks(String searchtitle){
-        return bookDaos.returnSearchedbooks(searchtitle);
+    public Page<bookdto> getSearchBooks(String searchtitle,Pageable pageable){
+        return bookDaos.returnSearchedbooks(searchtitle,pageable);
     }
 
      public boolean alterbookInventory(int book_id,String title,String author,int amount,int price,String imageUrl,String instruction,String ISBN){

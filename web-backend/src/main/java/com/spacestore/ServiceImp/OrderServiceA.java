@@ -8,6 +8,10 @@ import com.spacestore.repository.UserauthRepository;
 import com.spacestore.repository.OrderRepository;
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,12 +29,30 @@ public class OrderServiceA implements OrderService {
     @Resource
     Bookrepository bookrepository;
 
-    public List<ordertable> getOrder(String user) {
+    public Page<ordertable> getOrder(String user,Pageable pageable) {
 
         if (userauthRepository.findByUsername(user).getorders() != null) {
             // System.out.println(loginUserRepository.findById(user).get().getorders());
             ordertable ordertable;
-            return userauthRepository.findByUsername(user).getorders();
+            List<ordertable> orderItems = userauthRepository.findByUsername(user).getorders();
+            int totalElements = orderItems.size();
+            Sort sort = pageable.getSort();
+            int pageSize = pageable.getPageSize();
+            int pageNumber = pageable.getPageNumber();
+            int startOffset = pageNumber * pageSize;
+
+            // 确保开始偏移量不会超出结果列表的大小
+            if (startOffset >= totalElements) {
+                startOffset = 0;
+            }
+
+            List<ordertable> pagedResult = new ArrayList<>();
+            for (int i = startOffset; i < Math.min(startOffset + pageSize, totalElements); i++) {
+                pagedResult.add(orderItems.get(i));
+            }
+
+            // 创建并返回分页对象
+            return new PageImpl<>(pagedResult, pageable, totalElements);
         }
         return null;
     }
@@ -59,13 +81,13 @@ public class OrderServiceA implements OrderService {
         orderRepository.save(tmp);
     }
 
-    public List<ordertable> getOrders() {
-        return orderRepository.findAll();
+    public Page<ordertable> getOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
     }
 
-    public List<ordertable> getSearch(String username, String searchitem, Date Startdate, Date Enddate) {
+    public Page<ordertable> getSearch(String username, String searchitem, Date Startdate, Date Enddate, Pageable pageable) {
         if(searchitem.equals("null")&&Startdate==null&&Enddate==null){
-            return getOrder(username);
+            return getOrder(username,pageable);
         }
         List<ordertable> table = new ArrayList<>();
         List<booktable> booktables;
@@ -100,24 +122,43 @@ public class OrderServiceA implements OrderService {
                 }
             }
         }
-        return result;
+        int totalElements = result.size();
+        Sort sort = pageable.getSort();
+        int pageSize = pageable.getPageSize();
+        int pageNumber = pageable.getPageNumber();
+        int startOffset = pageNumber * pageSize;
+
+        // 确保开始偏移量不会超出结果列表的大小
+        if (startOffset >= totalElements) {
+            startOffset = 0;
+        }
+
+        List<ordertable> pagedResult = new ArrayList<>();
+        for (int i = startOffset; i < Math.min(startOffset + pageSize, totalElements); i++) {
+            pagedResult.add(result.get(i));
+        }
+
+        // 创建并返回分页对象
+        return new PageImpl<>(pagedResult, pageable, totalElements);
     }
 
-    public List<ordertable> getAllSearch( String searchitem, Date Startdate, Date Enddate){
-        if(searchitem.equals("null")&&Startdate==null&&Enddate==null){
-            return getOrders();
+    public Page<ordertable> getAllSearch(String searchitem, Date Startdate, Date Enddate, Pageable pageable) {
+        if (searchitem.equals("null") && Startdate == null && Enddate == null) {
+            return getOrders(pageable);
         }
+
         List<ordertable> table = new ArrayList<>();
         List<booktable> booktables;
-        if(searchitem.equals("null")){
-            booktables=bookrepository.findAll();
-        }
-        else{
+        if (searchitem.equals("null")) {
+            booktables = bookrepository.findAll();
+        } else {
             booktables = bookrepository.findByTitleLike(searchitem);
         }
+
         List<ordertable> result = new ArrayList<>();
         List<ordertable> intime = new ArrayList<>();
-        table=orderRepository.findAll();
+        table = orderRepository.findAll();
+
         if (Startdate == null) {
             intime = table;
         } else {
@@ -127,6 +168,7 @@ public class OrderServiceA implements OrderService {
                 }
             }
         }
+
         for (ordertable order : intime) {
             for (orderItem orderItem : order.getOrderItems()) {
                 booktable tmp = bookrepository.findByBookid(orderItem.getBook_id());
@@ -136,7 +178,26 @@ public class OrderServiceA implements OrderService {
                 }
             }
         }
-        return result;
+
+        // 手动分页逻辑
+        int totalElements = result.size();
+        Sort sort = pageable.getSort();
+        int pageSize = pageable.getPageSize();
+        int pageNumber = pageable.getPageNumber();
+        int startOffset = pageNumber * pageSize;
+
+        // 确保开始偏移量不会超出结果列表的大小
+        if (startOffset >= totalElements) {
+            startOffset = 0;
+        }
+
+        List<ordertable> pagedResult = new ArrayList<>();
+        for (int i = startOffset; i < Math.min(startOffset + pageSize, totalElements); i++) {
+            pagedResult.add(result.get(i));
+        }
+
+        // 创建并返回分页对象
+        return new PageImpl<>(pagedResult, pageable, totalElements);
     }
 
     public statics getstastic(String username,Date Startdate,Date Enddate){

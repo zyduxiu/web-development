@@ -26,8 +26,12 @@ public class BooksController {
 
     @CrossOrigin
     @GetMapping("/search")
-    public List<bookdto> returnSearchBooks(String searchtitle){
-        return booksService.getSearchBooks(searchtitle);
+    public Page<bookdto> returnSearchBooks(String searchtitle,int page,int size){
+        Pageable pageable=PageRequest.of(page,size);
+        if(searchtitle.equals("undefined")){
+            return booksService.getBooks(pageable);
+        }
+        return booksService.getSearchBooks(searchtitle,pageable);
     }
 
     @CrossOrigin
