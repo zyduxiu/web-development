@@ -2,7 +2,7 @@ package com.spacestore.Service;
 
 import com.spacestore.Entity.Carttable;
 import com.spacestore.Entity.ordertable;
-import com.spacestore.Entity.statics;
+import com.spacestore.DTO.statics;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

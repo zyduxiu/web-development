@@ -1,7 +1,7 @@
 package com.spacestore.ServiceImp;
 
+import com.spacestore.DTO.statics;
 import com.spacestore.Entity.*;
-import com.spacestore.Service.BooklistService;
 import com.spacestore.Service.OrderService;
 import com.spacestore.repository.Bookrepository;
 import com.spacestore.repository.UserauthRepository;
@@ -65,6 +65,7 @@ public class OrderServiceA implements OrderService {
         ordertable tmp = new ordertable();
         Date now = new Date();
         tmp.setAddress(address);
+        tmp.setTotalprice(booktable.getPrice()*amount);
         tmp.setPhonenumber(phonenumber);
         tmp.setTime(now);
         tmp.setLoginuser(userauthRepository.findByUsername(username));
@@ -200,7 +201,7 @@ public class OrderServiceA implements OrderService {
         return new PageImpl<>(pagedResult, pageable, totalElements);
     }
 
-    public statics getstastic(String username,Date Startdate,Date Enddate){
+    public statics getstastic(String username, Date Startdate, Date Enddate){
         List<ordertable> table=new ArrayList<>();
         List<ordertable> intime=new ArrayList<>();
         int totalcost=0;
@@ -229,9 +230,11 @@ public class OrderServiceA implements OrderService {
                     book=bookrepository.findByBookid(bookid);
                     result.addBookInList(book.getTitle(),orderItem.getAmount());
                     totalamount+=orderItem.getAmount();
-                    totalcost+=orderItem.getAmount()*book.getPrice();
+//                    totalcost+=orderItem.getAmount()*book.getPrice();
                 }
+
             }
+            totalcost+=order.getTotalprice();
         }
         result.setTotalbooks(totalamount);
         result.setTotalprice(totalcost);
@@ -263,10 +266,11 @@ public class OrderServiceA implements OrderService {
                     book=bookrepository.findByBookid(bookid);
                     result.addBookInList(book.getTitle(),orderItem.getAmount());
                     totalamount+=orderItem.getAmount();
-                    totalcost+=orderItem.getAmount()*book.getPrice();
+//                    totalcost+=orderItem.getAmount()*book.getPrice();
                 }
 
             }
+            totalcost+=order.getTotalprice();
         }
         result.setTotalbooks(totalamount);
         result.setTotalprice(totalcost);
@@ -300,8 +304,9 @@ public class OrderServiceA implements OrderService {
                     book=bookrepository.findByBookid(orderItem.getBook_id());
                     price=book.getPrice();
                 }
-                result.addBookInList(username,orderItem.getAmount()*(price));
+//                result.addBookInList(username,orderItem.getAmount()*(price));
             }
+            result.addBookInList(username,order.getTotalprice());
         }
         return result;
     }

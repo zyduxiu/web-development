@@ -89,6 +89,7 @@ Bookrepository bookrepository;
                 return false;
             }
         }
+        int totalPrice=0;
         //orderRepository.save(tmp);
         for(CartItem cart:carttable.getCartItems()){
             booktable booktable=bookrepository.findByBookid(cart.getBookid());
@@ -100,8 +101,10 @@ Bookrepository bookrepository;
             tmp2.setOrderTable(tmp);
            // orderItemRepository.save(tmp2);
             tmpp.add(tmp2);
+            totalPrice+=bookrepository.findByBookid(cart.getBookid()).getPrice()*cart.getAmount();
         }
         tmp.setOrderItems(tmpp);
+        tmp.setTotalprice(totalPrice);
         orderRepository.save(tmp);
         carttable.getCartItems().clear();
         cartRepository.save(carttable);

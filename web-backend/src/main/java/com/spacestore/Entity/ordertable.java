@@ -32,4 +32,5 @@ private List<orderItem> OrderItems;
     private String phonenumber;
     private String address;
     private Date time;
+    private Integer totalprice;
 }
