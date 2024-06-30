@@ -86,7 +86,7 @@ export default function UserStastics() {
             },
             xAxis: {
                 type: 'category',
-                data: stastics?.map(item => item.name) || [],
+                data: stastics?.slice(0, 10).map(item => item.name) || [],
                 boundaryGap: true
             },
             yAxis: {
@@ -96,7 +96,7 @@ export default function UserStastics() {
                 {
                     name: flag?'数量':'总额',
                     type: 'bar',
-                    data: flag?stastics?.map(item => item.second) || []:stastics?.map(item => item.third) || [],
+                    data: flag ? stastics?.slice(0, 10).map(item => item.second) || [] : stastics?.slice(0, 10).map(item => item.third) || [],
                     itemStyle: {
                         color: function (params) {
                             return chroma.scale(['#ff6384', '#36a2eb', '#cc65fe']).mode('lch').colors(stastics?.length)[params.dataIndex];

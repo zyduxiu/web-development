@@ -23,7 +23,7 @@ export default function OrderManageList(){
     const [selectedDates, setSelectedDates] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [totalOrders, setTotalOrders] = useState(0);
 
     useEffect(() => {

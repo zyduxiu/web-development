@@ -23,7 +23,7 @@ export default function OrderManageList(){
         const [selectedDates, setSelectedDates] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [totalOrders, setTotalOrders] = useState(0);
 
         useEffect(() => {
@@ -177,15 +177,11 @@ export default function OrderManageList(){
                         <b style={{
                             fontSize: '2rem',
                             paddingLeft: '1%'
-                        }}>My</b>
-                        <b style={{
-                            fontSize: '2rem',
-                            paddingLeft: '1%'
                         }}>Order</b>
                         <b style={{
                             fontSize: '2rem',
                             paddingLeft: '1%'
-                        }}>List</b>
+                        }}>Management</b>
                         <Search onSearch={(value) => setSearchitem(value)} style={{
                             width: '40%',
                             marginLeft: '8%',

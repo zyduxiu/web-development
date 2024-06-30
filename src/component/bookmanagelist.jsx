@@ -578,7 +578,7 @@ let cur={};
                                 <Form.Item name="amount" label="amount" style={{width: '50%'}} rules={[{
                                     //required: true,
                                     type: 'number',
-                                    min: 1,
+                                    min: 0,
                                     message: '请输入书本库存数量'
                                 }]}>
                                     <InputNumber size="large" style={{}} defaultValue={!curitem.deleted ? curitem.amount : "已下架"}
@@ -692,7 +692,7 @@ let cur={};
                                 <Form.Item name="amount" label="amount" style={{width: '50%'}} rules={[{
                                     required: true,
                                     type: 'number',
-                                    min: 1,
+                                    min: 0,
                                     message: '请输入书本库存数量'
                                 }]}>
                                     <InputNumber size="large" style={{}} onChange={handleAmountchange}
